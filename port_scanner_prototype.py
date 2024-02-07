@@ -15,7 +15,7 @@ def scan_port(host, port):
             s.settimeout(1)
              
              # Try to connect to the specified host and port
-             result+ s.connect_ex((host, port))
+             result= s.connect_ex((host, port))
              if result == 0;
                 
                 # Get the service name associated with the port
