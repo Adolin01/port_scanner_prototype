@@ -57,28 +57,30 @@ def main():
 
     # Define required host and ports arguments
     parser.add_argument("host", help="Target host IP address")
-    parser.add_argument("ports", help="Target port(s) separated by commas")
+    parser.add_argument("ports", help="Target port(s) separated by commas or a range (e.g., 1-1000)")
     args = parser.parse_args()
 
     try:
         # Extract host and ports information from command-line arguments
         host = args.host
-        ports_list = [int(p.strip()) for p in args.ports.split(',')]
 
-        # Add support for IP range scanning
-        if '-' in host:
-            start, end = map(int, host.split('-'))
-            hosts = [f'192.168.1.{i}' for i in range(start, end + 1)]
-        else:
-            hosts = [host]
+        # Parse the ports argument
+        ports_list = parse_ports_argument(args.ports)
 
         # Iterate through hosts and scan specified ports
-        for h in hosts:
-            scan_ports(h, ports_list)
+        scan_ports(host, ports_list)
 
-    except ValueError:
-        print("Invalid Port input. Please enter a comma-separated list of integers.")
+    except ValueError as e:
+        print(f"Error: {e}")
         exit()
+
+def parse_ports_argument(ports_argument):
+    # Parse the ports argument and return a list of integers
+    if '-' in ports_argument:
+        start, end = map(int, ports_argument.split('-'))
+        return list(range(start, end + 1))
+    else:
+        return [int(p.strip()) for p in ports_argument.split(',')]
 
 if __name__ == "__main__":
     # Execute the main function when the script is run
