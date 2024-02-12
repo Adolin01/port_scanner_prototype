@@ -64,7 +64,10 @@ def scan_ports(host, ports_list, timeout):
     print("\nScanning ports...\n")
 
     # Create a tqdm progress bar for the scanning process
-    with tqdm(total=len(ports_list), desc="Scan Progress", unit="ports", dynamic_ncols=True) as progress_bar:
+    
+    try:
+        # Create a tqdm progress bar for the scanning process
+        with tqdm(total=len(ports_list), desc="Scan Progress", unit="ports", dynamic_ncols=True) as progress_bar:
         with concurrent.futures.ThreadPoolExecutor() as executor:
             # Create a dictionary to store futures (results of concurrent tasks)
             futures = {executor.submit(scan_port, host, port, progress_bar, timeout): port for port in ports_list}
@@ -78,7 +81,14 @@ def scan_ports(host, ports_list, timeout):
                 if result:
                     open_ports.append(result)
 
-    # Return the list of open ports
+    except Exception as e:
+        print(f"Error during port scanning {e}")
+
+    finally:
+        # Explicity shutdown the ThreadPoolExecutor to ensure all threads are completed
+        executor.shutdown(wait=True)
+
+# Return the list of open ports
     return open_ports
 
 # Main function to handle command-line arguments and initiate the scanning process
@@ -106,10 +116,27 @@ def main():
 
         # Check if any open ports were found
         if open_ports:
-            # Print a summary of open ports
-            print("\nScan completed. Open ports found:")
+            # Create a PrettyTable for tabular output
+            table = PrettyTable()
+            table.field_names = ["Port", "Service Name", "Status", "Banner"]
+
+            # Add rows to the table
             for result in open_ports:
-                print(f"Port {result['port']} ({result['service_name']}): Open")
+                port = result['port']
+                service_name = result['service_name']
+                status = "Open"
+                banner = result['banner'] if result['banner'] else "-"
+
+                # Add a row to the table
+                table.add_row([port, service_name. status, banner])
+
+            # Print the table
+            print("\nScan completed. Open ports found:")
+            print(table)
+        else:
+            # Print a message if no open ports were found
+            print("\nNo open ports found.")
+
                 # Print banner information if available
                 if result['banner']:
                     print(f" Banner: {result['banner']}")
