@@ -5,6 +5,7 @@ import concurrent.futures
 import argparse
 import logging
 from tqdm import tqdm  # Import tqdm for a progress bar
+from prettytable import PrettyTable  # Import PrettyTable for tabular output
 
 # Setup logging configuration, specifying a log file and setting the logging level to INFO
 logging.basicConfig(filename='port_scanner.log', level=logging.INFO)
@@ -63,23 +64,21 @@ def scan_ports(host, ports_list, timeout):
     # Print a message indicating that port scanning is starting
     print("\nScanning ports...\n")
 
-    # Create a tqdm progress bar for the scanning process
-    
     try:
         # Create a tqdm progress bar for the scanning process
         with tqdm(total=len(ports_list), desc="Scan Progress", unit="ports", dynamic_ncols=True) as progress_bar:
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            # Create a dictionary to store futures (results of concurrent tasks)
-            futures = {executor.submit(scan_port, host, port, progress_bar, timeout): port for port in ports_list}
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                # Create a dictionary to store futures (results of concurrent tasks)
+                futures = {executor.submit(scan_port, host, port, progress_bar, timeout): port for port in ports_list}
 
-            # Iterate through completed futures
-            for future in concurrent.futures.as_completed(futures):
-                # Get the result (open port details) from the completed future
-                result = future.result()
+                # Iterate through completed futures
+                for future in concurrent.futures.as_completed(futures):
+                    # Get the result (open port details) from the completed future
+                    result = future.result()
 
-                # If an open port is found, add it to the list of open ports
-                if result:
-                    open_ports.append(result)
+                    # If an open port is found, add it to the list of open ports
+                    if result:
+                        open_ports.append(result)
 
     except Exception as e:
         print(f"Error during port scanning {e}")
@@ -88,7 +87,7 @@ def scan_ports(host, ports_list, timeout):
         # Explicity shutdown the ThreadPoolExecutor to ensure all threads are completed
         executor.shutdown(wait=True)
 
-# Return the list of open ports
+    # Return the list of open ports
     return open_ports
 
 # Main function to handle command-line arguments and initiate the scanning process
@@ -128,18 +127,11 @@ def main():
                 banner = result['banner'] if result['banner'] else "-"
 
                 # Add a row to the table
-                table.add_row([port, service_name. status, banner])
+                table.add_row([port, service_name, status, banner])
 
             # Print the table
             print("\nScan completed. Open ports found:")
             print(table)
-        else:
-            # Print a message if no open ports were found
-            print("\nNo open ports found.")
-
-                # Print banner information if available
-                if result['banner']:
-                    print(f" Banner: {result['banner']}")
         else:
             # Print a message if no open ports were found
             print("\nNo open ports found.")
