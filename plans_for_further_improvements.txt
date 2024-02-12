@@ -1,30 +1,26 @@
 1. **Logging Timestamps:**
-   - Enhance logging by adding timestamps to log messages. This is relatively easy and provides better insight into the timing of events.
+   - Enhance logging by adding timestamps to log messages, providing better insight into the timing of events.
 
-2. **Output Table Enhancement:**
-   - Improve the output format by presenting information in a tabular format using a library like `prettytable`. This enhances readability without significantly increasing complexity.
+2. **Port Range Validation:**
+   - Validate that port ranges the user provides are within the valid range of ports (1-65535). It will involve checking user input and ensuring it meets specific criteria.
 
-3. **Detailed Error Messages:**
-   - Provide more specific and informative error messages. While not difficult, it requires careful consideration of potential errors and appropriate messages.
+3. **Output Table Enhancement:**
+   - Improve the output format by presenting information in a tabular format using a library like `prettytable`.
 
-4. **Interactive Timeout Adjustment:**
-   - Implement an interactive mode allowing users to adjust the timeout during the scan. This involves user input handling but is manageable.
+4. **Detailed Error Messages:**
+   - Provide more informative error messages. 
 
-5. **Improved IP Address Validation:**
-   - Extend IP address validation to not only check for valid IPv4 addresses but also attempt to resolve the IP address. Requires handling DNS resolution errors.
+5. **Interactive Timeout Adjustment:**
+   - Implement an interactive mode allowing users to adjust the timeout during the scan. It's tricky as this involves user input handling.
 
-6. **Port Range Validation:**
-   - Validate that port ranges provided by the user are within the valid range (1-65535). This involves checking user input and ensuring it meets specific criteria.
+6. **Improved IP Address Validation:**
+   - Extend IP address validation to check for valid IPv4 addresses and attempt to resolve the IP address. Requires handling DNS resolution errors.
 
-7. **Logging Enhancements:**
-   - Extend logging to include more details about the scan, such as start time, end time, and total duration. This is more involved but adds valuable information for analysis.
+7. **Port Range Validation:**
+   - Validate that port ranges the user provides are within the valid range of ports (1-65535). It will involve checking user input and ensuring it meets specific criteria.
 
-8. **Banner Retrieval Enhancement:**
-   - Modify the script to retrieve larger banners or additional information for a more comprehensive view. This may involve handling larger data volumes and is more complex.
+8. **Logging Enhancements:**
+   - Extend logging to include more details about the scan, such as start time, end time, and total duration. Gather and expand this dataset for analysis. 
 
 9. **Support for UDP Scanning:**
-   - Add the ability to perform UDP port scanning in addition to TCP scanning. UDP scanning introduces additional complexities due to the connectionless nature of UDP.
-
-10. **Concurrency Level Adjustment:**
-    - Allow users to specify the level of concurrency (number of threads) using a command-line argument. While it adds configurability, it requires careful management of thread safety.
-
+   - Add the ability to perform UDP port scanning and TCP scanning. UDP scanning introduces additional complexities due to the connectionless nature of UDP.
